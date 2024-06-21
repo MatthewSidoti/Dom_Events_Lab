@@ -1,18 +1,55 @@
-const display = document.getElementById("display");
+const calculator = document.querySelector('#calculator');
+const display = document.querySelector('.display');
+const buttons = document.querySelectorAll('.button');
+let currentNumber = '';
+let firstNumber = null;
+let operator;
+buttons.forEach((button) => {
+  button.addEventListener('click', (event) => {
+    console.log(event.target.innerText);
+  })
+});
+calculator.addEventListener('click', (event) => {
+  const target = event.target;
+  const value = target.innerText
+  console.log(event.target.innerText);
+  if (target.classList.contains('number')) {
+    currentNumber += value;
+    display.innerText = currentNumber;
 
-function appendToDisplay(input){
-    display.value += input;
-}
-
-function clearDisplay(){
-  display.value="";
-}
-
-function calculate(){
-  try{
-  display.value=eval(display.value)
-}
-catch(error){
-  display.value= "Error"
-}}
-  
+  }
+  if(target.classList.contains('operator')){
+    if(currentNumber === '') return; 
+    if(value === 'C'){
+      currentNumber = '';
+      firstNumber = null;
+      operator = null;
+      display.innerText = '0';
+      return;
+    }
+    firstNumber = parseInt(currentNumber);
+    operator = value;
+    currentNumber = '';
+  }
+  if(target.classList.contains('equals')){
+    if (firstNumber === null || currentNumber === '') return;
+    let secondNumber = parseInt(currentNumber)
+    let result = 0;
+    if (operator === '*'){
+      result = firstNumber * secondNumber
+    }
+    if (operator === '+'){
+      result = firstNumber + secondNumber
+    }
+    if (operator === '/'){
+      result = firstNumber / secondNumber
+    }
+    if (operator === '-'){
+      result = firstNumber - secondNumber
+    }
+    display.innerText = result;
+    firstNumber = null;
+    operator = null;
+    currentNumber = result;
+  }
+})
